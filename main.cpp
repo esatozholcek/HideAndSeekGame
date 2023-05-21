@@ -1,11 +1,12 @@
-#include "widget.h"
+#include "view.h"
 
 #include <QApplication>
+#include <QGraphicsRectItem>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    Widget w;
+    View w;
     w.show();
     return a.exec();
 }
