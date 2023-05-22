@@ -10,6 +10,8 @@ View::View()
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setWindowTitle("Hide and Seek Game");
+    //setBackgroundBrush(Qt::red);
+    setStyleSheet("background-color: green");
 
 }
 
