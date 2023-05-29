@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/img">
         <file>games.png</file>
+        <file>ghost.png</file>
+        <file>ghost2.png</file>
     </qresource>
 </RCC>

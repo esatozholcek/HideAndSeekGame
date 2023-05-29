@@ -16,10 +16,10 @@ public:
         m_foodSize = 20;
         m_height = 800;
         m_width = 800;
-        m_player1X = 0;
-        m_player1Y = 0;
-        m_player2X = m_width - m_squareSize;
-        m_player2Y = m_height - m_squareSize;
+        m_player1X = m_squareSize;
+        m_player1Y = m_squareSize;
+        m_player2X = m_width - 2 * m_squareSize;
+        m_player2Y = m_height - 2 * m_squareSize;
         m_player1Score = 0;
         m_player2Score = 0;
 
@@ -38,6 +38,8 @@ protected:
     void keyPressEvent(QKeyEvent *event) override {
         if (m_gameOver) {
             // If the game is over, ignore key events
+            if(event->key() == Qt::Key_Escape)
+                QApplication::instance()->quit();
             return;
         }
         int step = 20; // Kareleri ne kadar adım hareket ettireceğimiz
@@ -62,6 +64,9 @@ protected:
         else if (event->key() == Qt::Key_S && m_player2Y < (m_height - m_squareSize))
             m_player2Y += step;
 
+        if(event->key() == Qt::Key_Escape)
+            QApplication::instance()->quit();
+
         checkFoodCollisions();
         update();
     }
@@ -82,16 +87,16 @@ protected:
         QPainter painter(this);
 
         // Paint background
-        painter.fillRect(0, 800, 800, 30, QColor("#11722b"));
-        //painter.fillRect(0, 0, 800, 800, QColor("#000000"));
+        painter.fillRect(0, 800, 800, 30, QColor(17, 114, 43));
+        //painter.fillRect(0, 0, 800, 800, QColor(0, 0, 0));
 
         // Draw player 1
         QRect player1Rect(m_player1X - m_squareSize, m_player1Y - m_squareSize, m_squareSize * 3, m_squareSize * 3);
-        painter.fillRect(player1Rect, QColor("#dece21"));
+        painter.fillRect(player1Rect, QColor(246, 154, 84));
 
         // Draw player 2
         QRect player2Rect(m_player2X - m_squareSize, m_player2Y - m_squareSize, m_squareSize * 3, m_squareSize * 3);
-        painter.fillRect(player2Rect, QColor("#dece21"));
+        painter.fillRect(player2Rect, QColor(246, 154, 84));
 
         // 1. oyuncunun karesini çizme
         painter.fillRect(m_player1X, m_player1Y, m_squareSize, m_squareSize, m_player1Color);
@@ -100,12 +105,21 @@ protected:
         painter.fillRect(m_player2X, m_player2Y, m_squareSize, m_squareSize, m_player2Color);
 
         // Yemleri çizme
+        /*
         for (int i = 0; i < m_foodPositions.size(); ++i) {
             const Food &food = m_foodPositions[i];
             painter.fillRect(food.position.x(), food.position.y(), m_foodSize, m_foodSize, food.color);
         }
+        */
+
+        QImage ghostImage(":/img/ghost2.png");
+        //ghostImage = ghostImage.scaled(m_foodSize, m_foodSize);
+        for (const Food &food : m_foodPositions) {
+            painter.drawImage(food.position, ghostImage);
+        }
 
         // Draw player scores
+        // Düzenleme yapılacak
         painter.setPen(Qt::white);
         painter.setFont(QFont("Arial", 20));
         painter.drawText(10, 823, QString("Player 1 Score: %1").arg(m_player1Score));
@@ -233,7 +247,7 @@ private:
                 m_foodPositions[index].timer = nullptr;
                 m_foodPositions.remove(index);
             });
-            food.timer->start(100); // Yeme animasyonu süresi (ms)
+            food.timer->start(300); // Yeme animasyonu süresi (ms)
         }
     }
 
