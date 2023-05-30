@@ -27,6 +27,12 @@ public:
         m_ghostImage.load(":/img/ghost.png");
         m_ghostImage = m_ghostImage.scaled(m_foodSize, m_foodSize);
 
+        m_player1Image.load(":/img/player1.png");
+        m_player1Image = m_player1Image.scaled(m_foodSize, m_foodSize);
+        m_player2Image.load(":/img/player2.png");
+        m_player2Image = m_player2Image.scaled(m_foodSize, m_foodSize);
+
+
         m_player1Color = Qt::red;
         m_player2Color = Qt::blue;
         numFoods = 20;
@@ -91,7 +97,6 @@ protected:
         QPainter painter(this);
 
         // Paint background
-        painter.fillRect(0, 800, 800, 30, QColor(17, 114, 43));
         painter.fillRect(0, 0, 800, 800, QColor(0, 0, 0));
 
 
@@ -107,8 +112,10 @@ protected:
 
         // 1. oyuncunun karesini çizme
         painter.fillRect(m_player1X, m_player1Y, m_squareSize, m_squareSize, m_player1Color);
+        painter.drawImage(QPointF(m_player1X, m_player1Y), m_player1Image);
         // 2. oyuncunun karesini çizme
         painter.fillRect(m_player2X, m_player2Y, m_squareSize, m_squareSize, m_player2Color);
+        painter.drawImage(QPointF(m_player2X, m_player2Y), m_player2Image);
 
         // Yemleri çizme
         for (const Food &food : m_foodPositions) {
@@ -121,17 +128,10 @@ protected:
             }
         }
 
-        /*
-        QImage ghostImage(":/img/ghost2.png");
-        //ghostImage = ghostImage.scaled(m_foodSize, m_foodSize);
-        for (const Food &food : m_foodPositions) {
-            painter.drawImage(food.position, ghostImage);
-        }
-        */
 
 
         // Draw player scores
-        // Düzenleme yapılacak
+        painter.fillRect(0, 800, 800, 30, QColor(17, 114, 43));
         painter.setPen(Qt::white);
         painter.setFont(QFont("Arial", 20));
         painter.drawText(10, 823, QString("Player 1 Score: %1").arg(m_player1Score));
@@ -154,10 +154,6 @@ protected:
 
 
         painter.end();
-    }
-
-    void paintGhost(QPaintEvent *) {
-
     }
 
 private:
@@ -183,6 +179,8 @@ private:
     QColor m_player2Color;
     QVector<Food> m_foodPositions;
     QImage m_ghostImage;
+    QImage m_player1Image;
+    QImage m_player2Image;
     bool m_gameOver = false;
 
 
@@ -254,7 +252,6 @@ private:
     }
 
     void removeFood(int index) {
-        // Yemi silme
         Food &food = m_foodPositions[index];
         if (food.timer == nullptr) {
             food.timer = new QTimer(this);
@@ -273,8 +270,20 @@ private:
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
-    Window window;
-    window.show();
+    try {
+        // Load the window icon
+        QIcon windowIcon(":/img/games.png");
 
-    return app.exec();
+        // Set the window icon
+        app.setWindowIcon(windowIcon);
+
+        Window window;
+        window.show();
+
+        return app.exec();
+    } catch (const std::exception& e) {
+        // Handle any exceptions that occurred
+        qDebug() << "Exception occurred: " << e.what();
+        return 1; // Return a non-zero value to indicate an error
+    }
 }
