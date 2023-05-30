@@ -12,6 +12,7 @@ class Window : public QWidget {
 public:
     Window(QWidget *parent = nullptr) : QWidget(parent) {
         setFixedSize(800, 830);
+
         m_squareSize = 25;
         m_foodSize = m_squareSize;
         m_height = 800;
@@ -93,17 +94,6 @@ protected:
         painter.fillRect(0, 800, 800, 30, QColor(17, 114, 43));
         painter.fillRect(0, 0, 800, 800, QColor(0, 0, 0));
 
-        /*
-        // Draw player 1
-        QRect player1Rect(m_player1X - m_squareSize, m_player1Y - m_squareSize, m_squareSize * 3, m_squareSize * 3);
-        painter.fillRect(player1Rect, QColor(246, 154, 84));
-
-        // Draw player 2
-        QRect player2Rect(m_player2X - m_squareSize, m_player2Y - m_squareSize, m_squareSize * 3, m_squareSize * 3);
-        painter.fillRect(player2Rect, QColor(246, 154, 84));
-        */
-
-
 
         // Draw player 1
         QRect player1Rect(m_player1X - m_squareSize*(3), m_player1Y - m_squareSize*(3), m_squareSize * 7, m_squareSize * 7);
@@ -151,7 +141,7 @@ protected:
 
         if (m_gameOver) {
             // Display "Game Over" text
-            painter.setPen(Qt::black);
+            painter.setPen(Qt::red);
             painter.setFont(QFont("Arial", 40));
             if(m_player1Score > m_player2Score) {
                 painter.drawText(rect(), Qt::AlignCenter, "Game Over\nPlayer 1 Won");
@@ -242,19 +232,19 @@ private:
         // Yemlerin oyuncular tarafından yenilmesini kontrol etme
         for (int i = 0; i < m_foodPositions.size(); ++i) {
             Food &food = m_foodPositions[i];
-            if ((food.position.x() >= m_player1X - 3 * m_squareSize && food.position.x() <= (m_player1X + 3 * m_squareSize)) &&
-                (food.position.y() >= m_player1Y - 3 * m_squareSize && food.position.y() <= (m_player1Y + 3*m_squareSize))) {
+            if ((food.position.x() >= m_player1X && food.position.x() < (m_player1X + m_squareSize)) &&
+                (food.position.y() >= m_player1Y && food.position.y() < (m_player1Y + m_squareSize))) {
                 numFoods--;
                 m_player1Score++;
-                //m_foodPositions.remove(i);
-                removeFood(i);
+                m_foodPositions.remove(i);
+                //removeFood(i);
                 break;
-            } else if ((food.position.x() >= m_player2X - 3*m_squareSize && food.position.x() <= (m_player2X + 3*m_squareSize)) &&
-                       (food.position.y() >= m_player2Y - 3*m_squareSize && food.position.y() <= (m_player2Y + 3*m_squareSize))) {
+            } else if ((food.position.x() >= m_player2X && food.position.x() < (m_player2X + m_squareSize)) &&
+                       (food.position.y() >= m_player2Y && food.position.y() < (m_player2Y + m_squareSize))) {
                 numFoods--;
                 m_player2Score++;
-                //m_foodPositions.remove(i);
-                removeFood(i);
+                m_foodPositions.remove(i);
+                //removeFood(i);
                 break;
             }
         }
