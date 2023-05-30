@@ -24,14 +24,14 @@ WASD
 ### What we did in this projects ?
 
 ### Gürkan AĞIR
-1-) Create and move two enemies without images. 
-2-) Create the ghosts and walk around randomly without images.
-3-) Eat the ghosts.
-4-) Appear the ghosts when inside of the light algorithm.
+1-) Create and move two enemies without images. <br>
+2-) Create the ghosts and walk around randomly without images.<br>
+3-) Eat the ghosts.<br>
+4-) Appear the ghosts when inside of the light algorithm.<br>
 
 ### Esad Özhölçek
-1-) Adding ghost images.
-2-) Create the darkness map.
-3-) Adding score table and algorithm.
+1-) Adding ghost images. <br>
+2-) Create the darkness map. <br>
+3-) Adding score table and algorithm. <br>
 
 ### Enes Bitik
