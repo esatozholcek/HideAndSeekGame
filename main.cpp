@@ -25,7 +25,7 @@ public:
 
         m_player1Color = Qt::red;
         m_player2Color = Qt::blue;
-        numFoods = 2;
+        numFoods = 100;
 
         generateFoods();
         m_timerId = startTimer(600); // Yemlerin hareket hızı (100ms)
@@ -86,16 +86,16 @@ protected:
     void paintEvent(QPaintEvent *) override {
         QPainter painter(this);
 
-        // Paint background
+        // Paint background of score table
         painter.fillRect(0, 800, 800, 30, QColor(17, 114, 43));
-        //painter.fillRect(0, 0, 800, 800, QColor(0, 0, 0));
+        painter.fillRect(0, 0, 800, 800, QColor(0, 0, 0));
 
         // Draw player 1
-        QRect player1Rect(m_player1X - m_squareSize, m_player1Y - m_squareSize, m_squareSize * 3, m_squareSize * 3);
+        QRect player1Rect(m_player1X - m_squareSize*(2.1), m_player1Y - m_squareSize*(2.1), m_squareSize * 5, m_squareSize * 5);
         painter.fillRect(player1Rect, QColor(246, 154, 84));
 
         // Draw player 2
-        QRect player2Rect(m_player2X - m_squareSize, m_player2Y - m_squareSize, m_squareSize * 3, m_squareSize * 3);
+        QRect player2Rect(m_player2X - m_squareSize*(2.1), m_player2Y - m_squareSize*(2.1), m_squareSize * 5, m_squareSize * 5);
         painter.fillRect(player2Rect, QColor(246, 154, 84));
 
         // 1. oyuncunun karesini çizme
@@ -105,31 +105,23 @@ protected:
         painter.fillRect(m_player2X, m_player2Y, m_squareSize, m_squareSize, m_player2Color);
 
         // Yemleri çizme
-        /*
-        for (int i = 0; i < m_foodPositions.size(); ++i) {
-            const Food &food = m_foodPositions[i];
-            painter.fillRect(food.position.x(), food.position.y(), m_foodSize, m_foodSize, food.color);
-        }
-        */
-
-        QImage ghostImage(":/img/ghost2.png");
-        //ghostImage = ghostImage.scaled(m_foodSize, m_foodSize);
         for (const Food &food : m_foodPositions) {
-            painter.drawImage(food.position, ghostImage);
+            QRect foodRect(food.position.x(), food.position.y(), m_foodSize, m_foodSize);
+            if (player1Rect.intersects(foodRect) || player2Rect.intersects(foodRect)) {
+                painter.fillRect(foodRect, food.color);
+            }
         }
 
         // Draw player scores
-        // Düzenleme yapılacak
         painter.setPen(Qt::white);
         painter.setFont(QFont("Arial", 20));
         painter.drawText(10, 823, QString("Player 1 Score: %1").arg(m_player1Score));
         painter.drawText(250, 823, QString("Player 2 Score: %1").arg(m_player2Score));
         painter.drawText(510, 823, QString("Number of Ghosts: %1").arg(numFoods));
 
-
         if (m_gameOver) {
             // Display "Game Over" text
-            painter.setPen(Qt::black);
+            painter.setPen(Qt::red);
             painter.setFont(QFont("Arial", 40));
             if(m_player1Score > m_player2Score) {
                 painter.drawText(rect(), Qt::AlignCenter, "Game Over\nPlayer 1 Won");
@@ -173,8 +165,6 @@ private:
         for (int i = 0; i < numFoods; ++i) {
             int foodX = QRandomGenerator::global()->bounded(m_width / m_foodSize) * m_foodSize;
             int foodY = QRandomGenerator::global()->bounded(m_height / m_foodSize) * m_foodSize;
-            //int foodX = (rand() % m_width / m_squareSize) * m_squareSize;
-            //int foodY = (rand() % m_width / m_squareSize) * m_squareSize;
             Food food;
             food.position = QPoint(foodX, foodY);
             food.color = Qt::black;
@@ -220,14 +210,12 @@ private:
                 numFoods--;
                 m_player1Score++;
                 m_foodPositions.remove(i);
-                //removeFood(i);
                 break;
             } else if ((food.position.x() >= m_player2X - m_squareSize && food.position.x() <= (m_player2X + m_squareSize)) &&
                        (food.position.y() >= m_player2Y - m_squareSize && food.position.y() <= (m_player2Y + m_squareSize))) {
                 numFoods--;
                 m_player2Score++;
                 m_foodPositions.remove(i);
-                //removeFood(i);
                 break;
             }
         }
@@ -254,8 +242,6 @@ private:
     void gameOver() {
 
     }
-
-
 };
 
 int main(int argc, char *argv[]) {
