@@ -12,20 +12,23 @@ class Window : public QWidget {
 public:
     Window(QWidget *parent = nullptr) : QWidget(parent) {
         setFixedSize(800, 830);
-        m_squareSize = 20;
-        m_foodSize = 20;
+        m_squareSize = 25;
+        m_foodSize = m_squareSize;
         m_height = 800;
         m_width = 800;
-        m_player1X = m_squareSize;
-        m_player1Y = m_squareSize;
-        m_player2X = m_width - 2 * m_squareSize;
-        m_player2Y = m_height - 2 * m_squareSize;
+        m_player1X = 3*m_squareSize;
+        m_player1Y = 3*m_squareSize;
+        m_player2X = m_width - 4 * m_squareSize;
+        m_player2Y = m_height - 4 * m_squareSize;
         m_player1Score = 0;
         m_player2Score = 0;
 
+        m_ghostImage.load(":/img/ghost.png");
+        m_ghostImage = m_ghostImage.scaled(m_foodSize, m_foodSize);
+
         m_player1Color = Qt::red;
         m_player2Color = Qt::blue;
-        numFoods = 100;
+        numFoods = 20;
 
         generateFoods();
         m_timerId = startTimer(600); // Yemlerin hareket hızı (100ms)
@@ -42,7 +45,7 @@ protected:
                 QApplication::instance()->quit();
             return;
         }
-        int step = 20; // Kareleri ne kadar adım hareket ettireceğimiz
+        int step = m_squareSize; // Kareleri ne kadar adım hareket ettireceğimiz
 
         // 1. oyuncunun hareketi (yön tuşlarıyla)
         if (event->key() == Qt::Key_Left && m_player1X > 0)
@@ -86,42 +89,69 @@ protected:
     void paintEvent(QPaintEvent *) override {
         QPainter painter(this);
 
-        // Paint background of score table
+        // Paint background
         painter.fillRect(0, 800, 800, 30, QColor(17, 114, 43));
         painter.fillRect(0, 0, 800, 800, QColor(0, 0, 0));
 
+        /*
         // Draw player 1
-        QRect player1Rect(m_player1X - m_squareSize*(2.1), m_player1Y - m_squareSize*(2.1), m_squareSize * 5, m_squareSize * 5);
+        QRect player1Rect(m_player1X - m_squareSize, m_player1Y - m_squareSize, m_squareSize * 3, m_squareSize * 3);
         painter.fillRect(player1Rect, QColor(246, 154, 84));
 
         // Draw player 2
-        QRect player2Rect(m_player2X - m_squareSize*(2.1), m_player2Y - m_squareSize*(2.1), m_squareSize * 5, m_squareSize * 5);
+        QRect player2Rect(m_player2X - m_squareSize, m_player2Y - m_squareSize, m_squareSize * 3, m_squareSize * 3);
         painter.fillRect(player2Rect, QColor(246, 154, 84));
+        */
+
+
+
+        // Draw player 1
+        QRect player1Rect(m_player1X - m_squareSize*(3), m_player1Y - m_squareSize*(3), m_squareSize * 7, m_squareSize * 7);
+        painter.fillRect(player1Rect, QColor(246, 154, 84));
+
+        // Draw player 2
+        QRect player2Rect(m_player2X - m_squareSize*(3), m_player2Y - m_squareSize*(3), m_squareSize * 7, m_squareSize * 7);
+        painter.fillRect(player2Rect, QColor(246, 154, 84));
+
+
 
         // 1. oyuncunun karesini çizme
         painter.fillRect(m_player1X, m_player1Y, m_squareSize, m_squareSize, m_player1Color);
-
         // 2. oyuncunun karesini çizme
         painter.fillRect(m_player2X, m_player2Y, m_squareSize, m_squareSize, m_player2Color);
 
         // Yemleri çizme
         for (const Food &food : m_foodPositions) {
             QRect foodRect(food.position.x(), food.position.y(), m_foodSize, m_foodSize);
+            //painter.drawImage(food.position, m_ghostImage);
+
             if (player1Rect.intersects(foodRect) || player2Rect.intersects(foodRect)) {
-                painter.fillRect(foodRect, food.color);
+                painter.drawImage(food.position, m_ghostImage);
+
             }
         }
 
+        /*
+        QImage ghostImage(":/img/ghost2.png");
+        //ghostImage = ghostImage.scaled(m_foodSize, m_foodSize);
+        for (const Food &food : m_foodPositions) {
+            painter.drawImage(food.position, ghostImage);
+        }
+        */
+
+
         // Draw player scores
+        // Düzenleme yapılacak
         painter.setPen(Qt::white);
         painter.setFont(QFont("Arial", 20));
         painter.drawText(10, 823, QString("Player 1 Score: %1").arg(m_player1Score));
         painter.drawText(250, 823, QString("Player 2 Score: %1").arg(m_player2Score));
         painter.drawText(510, 823, QString("Number of Ghosts: %1").arg(numFoods));
 
+
         if (m_gameOver) {
             // Display "Game Over" text
-            painter.setPen(Qt::red);
+            painter.setPen(Qt::black);
             painter.setFont(QFont("Arial", 40));
             if(m_player1Score > m_player2Score) {
                 painter.drawText(rect(), Qt::AlignCenter, "Game Over\nPlayer 1 Won");
@@ -132,7 +162,12 @@ protected:
             }
         }
 
+
         painter.end();
+    }
+
+    void paintGhost(QPaintEvent *) {
+
     }
 
 private:
@@ -157,6 +192,7 @@ private:
     QColor m_player1Color;
     QColor m_player2Color;
     QVector<Food> m_foodPositions;
+    QImage m_ghostImage;
     bool m_gameOver = false;
 
 
@@ -202,26 +238,28 @@ private:
 
 
     void checkFoodCollisions() {
+
         // Yemlerin oyuncular tarafından yenilmesini kontrol etme
         for (int i = 0; i < m_foodPositions.size(); ++i) {
             Food &food = m_foodPositions[i];
-            if ((food.position.x() >= m_player1X - m_squareSize && food.position.x() <= (m_player1X + m_squareSize)) &&
-                (food.position.y() >= m_player1Y - m_squareSize && food.position.y() <= (m_player1Y + m_squareSize))) {
+            if ((food.position.x() >= m_player1X - 3 * m_squareSize && food.position.x() <= (m_player1X + 3 * m_squareSize)) &&
+                (food.position.y() >= m_player1Y - 3 * m_squareSize && food.position.y() <= (m_player1Y + 3*m_squareSize))) {
                 numFoods--;
                 m_player1Score++;
-                m_foodPositions.remove(i);
+                //m_foodPositions.remove(i);
+                removeFood(i);
                 break;
-            } else if ((food.position.x() >= m_player2X - m_squareSize && food.position.x() <= (m_player2X + m_squareSize)) &&
-                       (food.position.y() >= m_player2Y - m_squareSize && food.position.y() <= (m_player2Y + m_squareSize))) {
+            } else if ((food.position.x() >= m_player2X - 3*m_squareSize && food.position.x() <= (m_player2X + 3*m_squareSize)) &&
+                       (food.position.y() >= m_player2Y - 3*m_squareSize && food.position.y() <= (m_player2Y + 3*m_squareSize))) {
                 numFoods--;
                 m_player2Score++;
-                m_foodPositions.remove(i);
+                //m_foodPositions.remove(i);
+                removeFood(i);
                 break;
             }
         }
         if (m_foodPositions.isEmpty()) {
             m_gameOver = true;
-            gameOver();
         }
     }
 
@@ -239,9 +277,7 @@ private:
         }
     }
 
-    void gameOver() {
 
-    }
 };
 
 int main(int argc, char *argv[]) {
