@@ -33,5 +33,6 @@ WASD
 1-) Adding ghost images. <br>
 2-) Create the darkness map. <br>
 3-) Adding score table and algorithm. <br>
+4-) Adding players images.<br>
 
 ### Enes Bitik
