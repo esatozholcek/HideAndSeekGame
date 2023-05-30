@@ -2,9 +2,9 @@
 
 Preparing by
 
-Gürkan AĞIR 20050111073
-Esat Özhölçek 20050111068
-Enes Bitik 22050151003
+Gürkan AĞIR 20050111073 <br>
+Esat Özhölçek 20050111068 <br>
+Enes Bitik 22050151003 <br>
 
 ## What is The Goal and How to play ?
 
