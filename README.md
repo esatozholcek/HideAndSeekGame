@@ -33,6 +33,9 @@ WASD
 1-) Adding ghost images. <br>
 2-) Create the darkness map. <br>
 3-) Adding score table and algorithm. <br>
-4-) Adding players images.<br>
 
-### Enes Bitik
+
+### Mehmet Enes Bitik
+1-) Adding players images.<br>
+2-) Writing the report.<br>
+3-)Helping the design.<br>
