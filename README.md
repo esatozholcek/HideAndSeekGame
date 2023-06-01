@@ -4,7 +4,7 @@ Preparing by
 
 Gürkan AĞIR 20050111073 <br>
 Esat Özhölçek 20050111068 <br>
-Enes Bitik 22050151003 <br>
+Mehmet Enes Bitik 22050151003 <br>
 
 ## What is The Goal and How to play ?
 
@@ -33,9 +33,9 @@ WASD
 1-) Adding ghost images. <br>
 2-) Create the darkness map. <br>
 3-) Adding score table and algorithm. <br>
-
+4-) Adding players images.<br>
 
 ### Mehmet Enes Bitik
-1-) Adding players images.<br>
-2-) Writing the report.<br>
-3-)Helping the design.<br>
+1-) Writing the report.<br>
+2-) Helping the design.<br>
+3-) General and calculation help with the code.<br>
