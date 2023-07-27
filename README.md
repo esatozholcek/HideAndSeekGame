@@ -17,8 +17,10 @@ Arrow keys
 WASD
 
 ## Screen Shoots of the game
-![image](https://github.com/esatozholcek/HideAndSeekGame/assets/91716520/c2b30c64-2769-4a28-9506-b8b6d6608a2e)
-![image](https://github.com/esatozholcek/HideAndSeekGame/assets/91716520/02be528a-c938-4040-8c3c-ea2252828434)
+<img width="500" alt="Ekran görüntüsü 2023-05-30 230445" src="https://github.com/esatozholcek/HideAndSeekGame/assets/91495699/8b714b25-4338-49c4-b1e6-86d6267276d5">
+<br>
+<img width="500" alt="Ekran görüntüsü 2023-05-30 230516" src="https://github.com/esatozholcek/HideAndSeekGame/assets/91495699/6dfb78ac-e804-494c-9c78-d9b5b9f6d827">
+
 
 
 ### What we did in this projects ?
